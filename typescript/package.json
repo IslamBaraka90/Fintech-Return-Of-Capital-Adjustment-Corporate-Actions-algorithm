@@ -1,0 +1,21 @@
+{
+  "name": "fintech-return-of-capital",
+  "version": "0.1.0",
+  "description": "Return-of-capital adjustment on exact decimal-string arithmetic, keeping the market-data, investor-return and US tax views separate, with basis-runway and gross-versus-net analysis.",
+  "keywords": ["fintech", "corporate-actions", "return-of-capital", "cost-basis", "point-in-time", "exact-arithmetic", "market-data", "algorithm"],
+  "homepage": "https://github.com/IslamBaraka90/Fintech-Return-Of-Capital-Adjustment-Corporate-Actions-algorithm",
+  "license": "MIT",
+  "author": "The Fintech Builder",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "files": ["dist", "README.md", "LICENSE"],
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "node --experimental-strip-types --test \"test/*.test.ts\"",
+    "example": "node --experimental-strip-types examples/quickstart.ts"
+  },
+  "devDependencies": { "typescript": "^5.7.0" }
+}

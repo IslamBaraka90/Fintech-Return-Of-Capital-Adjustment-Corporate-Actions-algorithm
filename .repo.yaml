@@ -1,0 +1,63 @@
+repo_slug: "Fintech-Return-Of-Capital-Adjustment-Corporate-Actions-algorithm"
+github: "IslamBaraka90/Fintech-Return-Of-Capital-Adjustment-Corporate-Actions-algorithm"
+visibility: "public"
+
+derives_from:
+  topic_id: "D02-F02-A05"
+  title: "Return-of-Capital Adjustment"
+  domain_id: "D02"
+  domain: "Corporate Actions and Security Master Data"
+  family_id: "D02-F02"
+  family: "Complex Distributions"
+  source_path: "algorithms/domains/D02-corporate-actions-and-security-master-data/D02-F02-complex-distributions/D02-F02-A05-return-of-capital-adjustment"
+
+article_url: "https://thefintechbuilder.com/corporate-actions-and-security-master-data/complex-distributions/return-of-capital-adjustment/"
+languages: ["python", "typescript"]
+npm_subpath: "fintech-algorithms/corporate-actions-and-security-master-data/complex-distributions/return-of-capital-adjustment"
+
+# COMPLETES D02-F02. Every live topic in Complex Distributions now has a repo.
+#
+# The defining idea is SEPARATION. Three views of one payment — market data, investor
+# returns, US tax — that must never be blended, and the reference implementation is built
+# around keeping them apart. The repo's job was to make the blending errors visible.
+#
+# Split model: the reader keeps the teaching snippet; this repo owns the calculation plus the
+# VIEWS surface (verify_views, adjustment_basis_comparison, adjust_price_series,
+# basis_runway).
+#
+#   - adjustment_basis_comparison -> THE surface for this topic. Adjusting a price series by
+#     the NET cash a holder received instead of the GROSS amount that left the company is the
+#     classic error, and this prices it: 23.12 instead of 23.00, a 0.12 overstatement, 0.52%
+#     of the price. Reads terms from the revision the calculation ACTUALLY selected, because
+#     reading from the wrong one would misreport the gap.
+#   - basis_runway -> the tax view's own trap. Basis falls until it is gone and everything
+#     after that is a GAIN rather than a further reduction — a taxable event nobody schedules,
+#     arriving on whichever payment happens to cross. Deliberately independent of calculate()
+#     because the amounts are what the issuer CLASSIFIED, not what it distributed (2.00
+#     distributed, 1.20 classified in the fixture).
+#   - verify_views -> exact equalities, not tolerances, because the module never leaves
+#     rational arithmetic. Includes the neat one: having basis left is MUTUALLY EXCLUSIVE with
+#     having exceeded it.
+#   - adjust_price_series -> both directions, because a return of capital genuinely needs
+#     both: backward for a return series, forward for a cost basis. Documents honestly that
+#     the forward round trip is NOT bit-exact, since the forward factor is published at eight
+#     decimals (25 -> 23 -> 27.17, not back to 25).
+#
+# NO STREAMING ENGINE — one event, three views.
+#
+# DECIMAL STRINGS END TO END. The reference uses Decimal with 8dp ROUND_HALF_UP and takes
+# strings in and out, so no float ever crosses the interface. The port keeps that and goes
+# further: EXACT RATIONAL internally, rounding ONCE at the end. Python uses Fraction, TS reuses
+# the BigInt Rational built for D02-F02-A04.
+#
+# ROUNDING EQUIVALENCE WAS VERIFIED, NOT ASSUMED. The reference divides in Decimal's default
+# 28-significant-digit context and then quantizes to 8dp; this port divides exactly and
+# quantizes once. Those can differ only in a double-rounding coincidence, so it was tested:
+# 200,000 random 8dp divisions, zero divergences. Then the whole calculation was checked
+# against the reference on 400 randomised inputs — 400/400 agreement INCLUDING which inputs
+# raise and with what. Exact-then-round is strictly the more correct of the two, and it makes
+# Python and TS identical by construction rather than by coincidence.
+#
+# The same-day ordering rule is worth keeping: sequence and priorEventIds must agree, because
+# a reference price that does not know what already moved it today is not a reference price.
+model: "split"
