@@ -6,7 +6,6 @@ build-backend = "setuptools.build_meta"
 name = "fintech-return-of-capital"
 version = "0.1.0"
 description = "Return-of-capital adjustment on exact decimal-string arithmetic, keeping the market-data, investor-return and US tax views separate, with basis-runway and gross-versus-net analysis."
-readme = "../README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [{ name = "The Fintech Builder" }]
